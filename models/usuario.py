@@ -20,7 +20,14 @@ class UserModel(banco.Model):
 
     @classmethod
     def find_user(cls, user_id):
-        user = cls.query.filter_by(hotel_id=user_id).first()  # SELECT * FROM usuario WHERE user_id == $user_id
+        user = cls.query.filter_by(user_id=user_id).first()  # SELECT * FROM usuario WHERE user_id == $user_id
+        if user:
+            return user
+        return None
+
+    @classmethod
+    def find_by_login(cls, login):
+        user = cls.query.filter_by(login=login).first()  # SELECT * FROM usuario WHERE user_id == $user_id
         if user:
             return user
         return None
