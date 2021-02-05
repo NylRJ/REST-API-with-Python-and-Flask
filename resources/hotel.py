@@ -31,10 +31,10 @@ class Hoteis(Resource):
 
 class Hotel(Resource):
     argumentos = reqparse.RequestParser()
-    argumentos.add_argument('nome')
-    argumentos.add_argument('estrelas')
-    argumentos.add_argument('diaria')
-    argumentos.add_argument('cidade')
+    argumentos.add_argument('nome', type=str, required=True, help="The field 'nome' cannot be left brank")
+    argumentos.add_argument('estrelas', type=float, required=True, help="The field 'estrelas' cannot be left brank")
+    argumentos.add_argument('diaria', type=float, required=True, help="The field 'estrelas' cannot be left brank")
+    argumentos.add_argument('cidade', type=str, required=True, help="The field 'cidade' cannot be left brank")
 
     def get(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
@@ -48,8 +48,11 @@ class Hotel(Resource):
 
         dados = Hotel.argumentos.parse_args()
         hotel = HotelModel(hotel_id, **dados)
-        hotel.save_hotel()
-        return hotel.json(), 201 # create
+        try:
+            hotel.save_hotel()
+        except:
+            return {'message': 'An internal error ocurrend trying to save hotel.'}, 500  # Internal server error
+        return hotel.json(), 201  # create
 
     def put(self, hotel_id):
         dados = Hotel.argumentos.parse_args()
@@ -59,12 +62,18 @@ class Hotel(Resource):
             hotel_encontrado.save_hotel()
             return hotel_encontrado.json(), 200  # ok
         hotel = HotelModel(hotel_id, **dados)
-        hotel.save_hotel()
-        return hotel.json(), 201  # created criado
+        try:
+            hotel.save_hotel()
+        except:
+            return {'message': 'An internal error ocurrend trying to save hotel.'}, 500  # Internal server error
+        return hotel.json(), 201  # create
 
     def delete(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
         if hotel:
-            hotel.delete_hotel()
+            try:
+                hotel.delete_hotel()
+            except:
+                return {'message': 'An error ocurrend trying to delete hotel.'}, 500  # Internal server error
             return {'message': 'hotel deletado'}
         return {'message': 'hotel not found.'}, 404  # not found
