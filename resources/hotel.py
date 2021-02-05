@@ -49,14 +49,22 @@ class Hotel(Resource):
         dados = Hotel.argumentos.parse_args()
         hotel = HotelModel(hotel_id, **dados)
         hotel.save_hotel()
-        return hotel.json(), 200
-
-
+        return hotel.json(), 201 # create
 
     def put(self, hotel_id):
-
         dados = Hotel.argumentos.parse_args()
-        hotel_objeto = HotelModel(hotel_id, **dados)
+        hotel_encontrado = HotelModel.find_hotel(hotel_id)
+        if hotel_encontrado:
+            hotel_encontrado.update_hotel(**dados)
+            hotel_encontrado.save_hotel()
+            return hotel_encontrado.json(), 200  # success
+        hotel = HotelModel(hotel_id, **dados)
+        hotel.save_hotel()
+        return hotel.json(), 201
+
+        return {'message': 'Hotel not found.'}, 404  # not found
+
+
         novo_hotel = hotel_objeto.json()
         hotel = Hotel.find_hotel(hotel_id)
         if hotel:
