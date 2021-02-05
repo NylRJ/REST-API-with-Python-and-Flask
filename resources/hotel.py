@@ -63,5 +63,8 @@ class Hotel(Resource):
         return hotel.json(), 201  # created criado
 
     def delete(self, hotel_id):
-
-        return {'message': 'hotel deletado'}
+        hotel = HotelModel.find_hotel(hotel_id)
+        if hotel:
+            hotel.delete_hotel()
+            return {'message': 'hotel deletado'}
+        return {'message': 'hotel not found.'}, 404  # not found
