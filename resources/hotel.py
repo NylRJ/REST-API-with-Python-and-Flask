@@ -57,23 +57,11 @@ class Hotel(Resource):
         if hotel_encontrado:
             hotel_encontrado.update_hotel(**dados)
             hotel_encontrado.save_hotel()
-            return hotel_encontrado.json(), 200  # success
+            return hotel_encontrado.json(), 200  # ok
         hotel = HotelModel(hotel_id, **dados)
         hotel.save_hotel()
-        return hotel.json(), 201
-
-        return {'message': 'Hotel not found.'}, 404  # not found
-
-
-        novo_hotel = hotel_objeto.json()
-        hotel = Hotel.find_hotel(hotel_id)
-        if hotel:
-            hotel.update(novo_hotel)
-            return novo_hotel, 200  # ok
-        hoteis.append(novo_hotel)
-        return novo_hotel, 201  # created criado
+        return hotel.json(), 201  # created criado
 
     def delete(self, hotel_id):
-        global hoteis
-        hoteis = [hotel for hotel in hoteis if hotel['hotel_id'] != hotel_id]
+
         return {'message': 'hotel deletado'}
