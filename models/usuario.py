@@ -25,11 +25,11 @@ class UserModel(banco.Model):
             return user
         return None
 
-    def save_hotel(self):
+    def save_user(self):
         banco.session.add(self)
         banco.session.commit()
 
-    def delete_hotel(self):
+    def delete_user(self):
         banco.session.delete(self)
         banco.session.commit()
 
